@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A Message for Anusha</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Courier+Prime&display=swap');
+
+        body {
+            background-color: #1a1a1a;
+            color: #00ff41;
+            font-family: 'Courier Prime', monospace;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            overflow: hidden;
+        }
+
+        #terminal {
+            width: 80%;
+            max-width: 600px;
+            background-color: #000;
+            border: 2px solid #00ff41;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 0 20px #00ff41;
+        }
+
+        #output p {
+            margin: 0;
+            white-space: pre-wrap;
+        }
+
+        .cursor {
+            display: inline-block;
+            background-color: #00ff41;
+            width: 10px;
+            height: 1.2em;
+            animation: blink 1s step-end infinite;
+        }
+
+        @keyframes blink {
+            from, to { background-color: transparent }
+            50% { background-color: #00ff41; }
+        }
+        .heart {
+            color: #ff0000;
+            display: inline-block;
+        }
+
+        #reply-section {
+            margin-top: 20px;
+            display: none;
+        }
+
+        #reply-input {
+            background-color: #000;
+            border: 1px solid #00ff41;
+            color: #00ff41;
+            font-family: 'Courier Prime', monospace;
+            padding: 5px;
+            width: calc(100% - 70px);
+        }
+
+        #reply-button {
+            background-color: #00ff41;
+            border: none;
+            color: #000;
+            font-family: 'Courier Prime', monospace;
+            padding: 5px 10px;
+            cursor: pointer;
+        }
+
+        #response-output p {
+            color: #ff00ff; /* A different color for the reply */
+        }
+    </style>
+</head>
+<body>
+
+<div id="terminal">
+    <div id="output"></div>
+    <div id="reply-section">
+        <input type="text" id="reply-input" placeholder="Type your reply, Anusha...">
+        <button id="reply-button">Send</button>
+    </div>
+    <div id="response-output"></div>
+    <span class="cursor"></span>
+</div>
+
+<script>
+    const output = document.getElementById('output');
+    const replySection = document.getElementById('reply-section');
+    const replyInput = document.getElementById('reply-input');
+    const replyButton = document.getElementById('reply-button');
+    const responseOutput = document.getElementById('response-output');
+    const cursor = document.querySelector('.cursor');
+
+    const lines = [
+        "Analyzing our friendship...",
+        "Status: Perfect... wait...",
+        "Error: a bug was found... and it's my fault.",
+        "",
+        "Initiating debugging sequence...",
+        "Applying patch: Unlimited apologies and one big hug.",
+        "",
+        "Patch applied successfully.",
+        "",
+        "I'm really sorry, Anusha <span class='heart'>❤️</span>"
+    ];
+
+    let lineIndex = 0;
+    let charIndex = 0;
+    let currentP;
+
+    function type() {
+        if (lineIndex < lines.length) {
+            if (charIndex === 0) {
+                currentP = document.createElement('p');
+                output.appendChild(currentP);
+            }
+
+            const currentLine = lines[lineIndex];
+            if (charIndex < currentLine.length) {
+                currentP.innerHTML += currentLine.charAt(charIndex);
+                charIndex++;
+                setTimeout(type, 50);
+            } else {
+                lineIndex++;
+                charIndex = 0;
+                setTimeout(type, 1000);
+            }
+        } else {
+            cursor.style.display = 'none';
+            replySection.style.display = 'block';
+        }
+    }
+
+    replyButton.addEventListener('click', () => {
+        const replyText = replyInput.value;
+        if (replyText.trim() !== '') {
+            const replyP = document.createElement('p');
+            replyP.innerHTML = `> Anusha: ${replyText}`;
+            responseOutput.appendChild(replyP);
+            replyInput.value = '';
+            replySection.style.display = 'none';
+
+            setTimeout(() => {
+                 const thankYouP = document.createElement('p');
+                 thankYouP.innerHTML = "Bug fixed. Friendship restored. <span class='heart'>❤️</span>";
+                 responseOutput.appendChild(thankYouP);
+            }, 1000);
+        }
+    });
+
+    type();
+
+    // A bit of a hack to get the first line to render correctly.
+    output.innerHTML = "<p></p>";
+    const firstP = output.getElementsByTagName('p')[0];
+    lines[0].split('').forEach((char, index) => {
+        setTimeout(() => {
+            firstP.innerHTML += char;
+        }, index * 50);
+    });
+
+    setTimeout(() => {
+        lineIndex = 1;
+        output.innerHTML += '<p></p>';
+        type();
+    }, (lines[0].length * 50) + 1000);
+
+</script>
+
+</body>
+</html> 
