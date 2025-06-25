@@ -83,10 +83,10 @@
 
 <div id="terminal">
     <div id="output"></div>
-    <div id="reply-section">
-        <input type="text" id="reply-input" placeholder="Type your reply, Anusha...">
-        <button id="reply-button">Send</button>
-    </div>
+    <form id="reply-section" action="https://formspree.io/f/mldnobwp" method="POST">
+        <input type="text" name="message" id="reply-input" placeholder="Type your reply, Anusha..." required>
+        <button type="submit" id="reply-button">Send</button>
+    </form>
     <div id="response-output"></div>
     <span class="cursor"></span>
 </div>
@@ -94,11 +94,7 @@
 <script>
     const output = document.getElementById('output');
     const replySection = document.getElementById('reply-section');
-    const replyInput = document.getElementById('reply-input');
-    const replyButton = document.getElementById('reply-button');
-    const responseOutput = document.getElementById('response-output');
     const cursor = document.querySelector('.cursor');
-
     const lines = [
         "Analyzing our friendship...",
         "Status: Perfect... wait...",
@@ -111,18 +107,15 @@
         "",
         "I'm really sorry, Anusha <span class='heart'>❤️</span>"
     ];
-
     let lineIndex = 0;
     let charIndex = 0;
     let currentP;
-
     function type() {
         if (lineIndex < lines.length) {
             if (charIndex === 0) {
                 currentP = document.createElement('p');
                 output.appendChild(currentP);
             }
-
             const currentLine = lines[lineIndex];
             if (charIndex < currentLine.length) {
                 currentP.innerHTML += currentLine.charAt(charIndex);
@@ -138,24 +131,6 @@
             replySection.style.display = 'block';
         }
     }
-
-    replyButton.addEventListener('click', () => {
-        const replyText = replyInput.value;
-        if (replyText.trim() !== '') {
-            const replyP = document.createElement('p');
-            replyP.innerHTML = `> Anusha: ${replyText}`;
-            responseOutput.appendChild(replyP);
-            replyInput.value = '';
-            replySection.style.display = 'none';
-
-            setTimeout(() => {
-                 const thankYouP = document.createElement('p');
-                 thankYouP.innerHTML = "Bug fixed. Friendship restored. <span class='heart'>❤️</span>";
-                 responseOutput.appendChild(thankYouP);
-            }, 1000);
-        }
-    });
-
     type();
 
     // A bit of a hack to get the first line to render correctly.
